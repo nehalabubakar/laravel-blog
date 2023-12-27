@@ -42,7 +42,7 @@ class BinshopsReaderController extends Controller
         $current_locale = \App::getLocale();
         $language = BinshopsLanguage::where('locale', $current_locale)
             ->first();
-        $language_id = $language->id ?? 1;
+        $language_id = $request->get('lang_id') ?? $language->id;
 
         //todo
         $title = 'Blog Page'; // default title...
@@ -106,7 +106,7 @@ class BinshopsReaderController extends Controller
         $current_locale = \App::getLocale();
         $language = BinshopsLanguage::where('locale', $current_locale)
             ->first();
-        $language_id = $language->id ?? 1;
+        $language_id = $request->get('lang_id') ?? $language->id;
 
         if (!config("binshopsblog.search.search_enabled")) {
             throw new \Exception("Search is disabled");
@@ -158,7 +158,7 @@ class BinshopsReaderController extends Controller
         $current_locale = \App::getLocale();
         $language = BinshopsLanguage::where('locale', $current_locale)
             ->first();
-        $language_id = $language->id ?? 1;
+        $language_id = $request->get('lang_id') ?? $language->id;
 
         $blogPostSlug = $request->route('blogPostSlug');
 
