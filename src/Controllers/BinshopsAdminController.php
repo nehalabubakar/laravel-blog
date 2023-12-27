@@ -75,7 +75,11 @@ class BinshopsAdminController extends Controller
      */
     public function create_post(Request $request)
     {
-        $language_id = $request->get('language_id');
+        $current_locale = \App::getLocale();
+        $language = BinshopsLanguage::where('locale', $current_locale)
+            ->first();
+        $language_id = $language->id ?? 1;
+
         $language_list = BinshopsLanguage::where('active',true)->get();
         $ts = BinshopsCategoryTranslation::where("lang_id",$language_id)->limit(1000)->get();
 

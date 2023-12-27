@@ -39,6 +39,11 @@ class BinshopsReaderController extends Controller
     {
         // the published_at + is_published are handled by BinshopsBlogPublishedScope, and don't take effect if the logged in user can manageb log posts
 
+        $current_locale = \App::getLocale();
+        $language = BinshopsLanguage::where('locale', $current_locale)
+            ->first();
+        $language_id = $language->id ?? 1;
+
         //todo
         $title = 'Blog Page'; // default title...
 
@@ -47,14 +52,14 @@ class BinshopsReaderController extends Controller
         if ($category_slug) {
             $category = BinshopsCategoryTranslation::where("slug", $category_slug)->with('category')->firstOrFail()->category;
             $categoryChain = $category->getAncestorsAndSelf();
-            $posts = $category->posts()->where("binshops_post_categories.category_id", $category->id)->with([ 'postTranslations' => function($query) use ($request){
-                $query->where("lang_id" , '=' , $request->get("lang_id"));
+            $posts = $category->posts()->where("binshops_post_categories.category_id", $category->id)->with(['postTranslations' => function ($query) use ($language_id, $request) {
+                $query->where("lang_id", '=', $language_id);
             }
             ])->get();
 
             $posts = BinshopsPostTranslation::join('binshops_posts', 'binshops_post_translations.post_id', '=', 'binshops_posts.id')
-                ->where('lang_id', $request->get("lang_id"))
-                ->where("is_published" , '=' , true)
+                ->where('lang_id', $language_id)
+                ->where("is_published", '=', true)
                 ->where('posted_at', '<', Carbon::now()->format('Y-m-d H:i:s'))
                 ->orderBy("posted_at", "desc")
                 ->whereIn('binshops_posts.id', $posts->pluck('id'))
@@ -66,8 +71,8 @@ class BinshopsReaderController extends Controller
             $title = 'Posts in ' . $category->category_name . " category"; // hardcode title here...
         } else {
             $posts = BinshopsPostTranslation::join('binshops_posts', 'binshops_post_translations.post_id', '=', 'binshops_posts.id')
-                ->where('lang_id', $request->get("lang_id"))
-                ->where("is_published" , '=' , true)
+                ->where('lang_id', $language_id)
+                ->where("is_published", '=', true)
                 ->where('posted_at', '<', Carbon::now()->format('Y-m-d H:i:s'))
                 ->orderBy("posted_at", "desc")
                 ->paginate(config("binshopsblog.per_page", 10));
@@ -78,7 +83,7 @@ class BinshopsReaderController extends Controller
         BinshopsCategory::loadSiblingsWithList($rootList);
 
         return view("binshopsblog::index", [
-            'lang_list' => BinshopsLanguage::all('locale','name'),
+            'lang_list' => BinshopsLanguage::all('locale', 'name'),
             'locale' => $request->get("locale"),
             'lang_id' => $request->get('lang_id'),
             'category_chain' => $categoryChain,
@@ -98,6 +103,11 @@ class BinshopsReaderController extends Controller
      */
     public function search(Request $request)
     {
+        $current_locale = \App::getLocale();
+        $language = BinshopsLanguage::where('locale', $current_locale)
+            ->first();
+        $language_id = $language->id ?? 1;
+
         if (!config("binshopsblog.search.search_enabled")) {
             throw new \Exception("Search is disabled");
         }
@@ -111,13 +121,13 @@ class BinshopsReaderController extends Controller
         BinshopsCategory::loadSiblingsWithList($rootList);
 
         return view("binshopsblog::search", [
-            'lang_id' => $request->get('lang_id'),
-            'locale' => $request->get("locale"),
-            'categories' => $rootList,
-            'query' => $query,
-            'search_results' => $search_results,
-            'routeWithoutLocale' => $request->get("routeWithoutLocale")
-        ]
+                'lang_id' => $language_id,
+                'locale' => $request->get("locale"),
+                'categories' => $rootList,
+                'query' => $query,
+                'search_results' => $search_results,
+                'routeWithoutLocale' => $request->get("routeWithoutLocale")
+            ]
         );
     }
 
@@ -145,20 +155,25 @@ class BinshopsReaderController extends Controller
      */
     public function viewSinglePost(Request $request)
     {
+        $current_locale = \App::getLocale();
+        $language = BinshopsLanguage::where('locale', $current_locale)
+            ->first();
+        $language_id = $language->id ?? 1;
+
         $blogPostSlug = $request->route('blogPostSlug');
 
         // the published_at + is_published are handled by BinshopsBlogPublishedScope, and don't take effect if the logged in user can manage log posts
         $blog_post = BinshopsPostTranslation::where([
             ["slug", "=", $blogPostSlug],
-            ['lang_id', "=" , $request->get("lang_id")]
+            ['lang_id', "=", $language_id]
         ])->firstOrFail();
 
         if ($captcha = $this->getCaptchaObject()) {
             $captcha->runCaptchaBeforeShowingPosts($request, $blog_post);
         }
 
-        $categories = $blog_post->post->categories()->with([ 'categoryTranslations' => function($query) use ($request){
-            $query->where("lang_id" , '=' , $request->get("lang_id"));
+        $categories = $blog_post->post->categories()->with(['categoryTranslations' => function ($query) use ($language_id, $request) {
+            $query->where("lang_id", '=', $language_id);
         }
         ])->get();
         return view("binshopsblog::single_post", [
