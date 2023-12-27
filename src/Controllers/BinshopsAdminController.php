@@ -55,7 +55,7 @@ class BinshopsAdminController extends Controller
      */
     public function index(Request $request)
     {
-        $current_locale = App::getLocale();
+        $current_locale = \App::getLocale();
         $language = BinshopsLanguage::where('locale', $current_locale)
             ->first();
         $language_id = $language->id ?? 1;
