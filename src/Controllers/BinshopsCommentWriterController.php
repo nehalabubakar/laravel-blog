@@ -25,7 +25,7 @@ class BinshopsCommentWriterController extends Controller
 
     public function __construct()
     {
-        $this->middleware(UserCanManageBlogPosts::class);
+//        $this->middleware(UserCanManageBlogPosts::class);
         $this->middleware(LoadLanguage::class);
 
     }
