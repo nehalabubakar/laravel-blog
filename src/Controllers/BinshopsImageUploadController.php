@@ -10,6 +10,7 @@ use BinshopsBlog\Models\BinshopsUploadedPhoto;
 use File;
 use BinshopsBlog\Requests\UploadImageRequest;
 use BinshopsBlog\Traits\UploadFileTrait;
+use BinshopsBlog\Models\BinshopsLanguage;
 
 /**
  * Class BinshopsAdminController
@@ -48,7 +49,11 @@ class BinshopsImageUploadController extends Controller
 
     public function index()
     {
-        return view("binshopsblog_admin::imageupload.index", ['uploaded_photos' => BinshopsUploadedPhoto::orderBy("id", "desc")->paginate(10)]);
+        $language_list = BinshopsLanguage::all();
+        return view("binshopsblog_admin::imageupload.index", [
+            'uploaded_photos' => BinshopsUploadedPhoto::orderBy("id", "desc")->paginate(10),
+            'language_list' => $language_list
+        ]);
     }
 
     /**
@@ -58,7 +63,10 @@ class BinshopsImageUploadController extends Controller
      */
     public function create()
     {
-        return view("binshopsblog_admin::imageupload.create", []);
+        $language_list = BinshopsLanguage::all();
+        return view("binshopsblog_admin::imageupload.create", [
+            'language_list' => $language_list
+        ]);
     }
 
     /**

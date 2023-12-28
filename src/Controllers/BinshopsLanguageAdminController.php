@@ -31,7 +31,10 @@ class BinshopsLanguageAdminController extends Controller
     }
 
     public function create_language(){
-        return view("binshopsblog_admin::languages.add_language");
+        $language_list = BinshopsLanguage::all();
+        return view("binshopsblog_admin::languages.add_language", [
+            'language_list' => $language_list
+        ]);
     }
 
     public function store_language(Request $request){
