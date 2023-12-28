@@ -11,7 +11,11 @@ class LoadLanguage
 
     public function handle($request, Closure $next)
     {
-        $default_locale = BinshopsConfiguration::get('DEFAULT_LANGUAGE_LOCALE');
+        if (\App::getLocale())
+            $default_locale = \App::getLocale();
+        else
+            $default_locale = BinshopsConfiguration::get('DEFAULT_LANGUAGE_LOCALE');
+
         $lang = BinshopsLanguage::where('locale', $default_locale)
             ->first();
 
