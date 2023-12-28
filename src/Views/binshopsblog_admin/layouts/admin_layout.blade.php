@@ -34,8 +34,22 @@
     {{--<link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">--}}
     {{--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">--}}
     {{--    @endif--}}
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 
-
+    <style>
+        #languageSelector {
+            padding: 10px;
+            border: 0px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            background: transparent;
+            color: #fff;
+        }
+        #languageSelector option {
+            color: #000;
+        }
+    </style>
 </head>
 <body>
 <div id="app">
@@ -59,12 +73,20 @@
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ml-auto">
                     <!-- Authentication Links -->
+                    <select id="languageSelector" class="text-uppercase">
+                        @forelse($language_list as $language)
+                            <option value="{{ $language->id }}" {{ \App::getLocale() == $language->locale ? 'selected' : '' }}>{{ $language->locale }}</option>
+                        @empty
+                        @endforelse
+                    </select>
 
-                    <li class='nav-item px-2'><a class='nav-link' href='{{route("binshopsblog.index" , \App::getLocale())}}' target="_blank">Blog home</a></li>
+                    <li class='nav-item px-2'>
+                        <a class='nav-link' href='{{route("binshopsblog.index" , \App::getLocale())}}'
+                           target="_blank">Blog home</a></li>
 
                     <li class="nav-item ">
                         <a id="" class="nav-link " href="#" role="button"
-                           aria-haspopup="true" aria-expanded="false" >
+                           aria-haspopup="true" aria-expanded="false">
                             Logged in as {{ Auth::user()->name }}
                         </a>
                     </li>
@@ -88,13 +110,13 @@
             <div class='row full-width-div nav-bar-full'>
                 <div class='list-group-color'>
                     @include("binshopsblog_admin::layouts.sidebar")
-{{--                    <div class=' list-group-color text-center mt-5 mb-3 text-muted binshops-version'>--}}
-{{--                        <small><a href='https://github.com/binshops/laravel-blog'>Binshops Blog</a></small>--}}
+                    {{--                    <div class=' list-group-color text-center mt-5 mb-3 text-muted binshops-version'>--}}
+                    {{--                        <small><a href='https://github.com/binshops/laravel-blog'>Binshops Blog</a></small>--}}
 
-{{--                        <small>--}}
-{{--                            Version 9.2.x--}}
-{{--                        </small>--}}
-{{--                    </div>--}}
+                    {{--                        <small>--}}
+                    {{--                            Version 9.2.x--}}
+                    {{--                        </small>--}}
+                    {{--                    </div>--}}
                 </div>
                 <div class='col-md-9 main-content'>
 
@@ -125,5 +147,19 @@
     </main>
 </div>
 
+<script>
+    document.getElementById('languageSelector').addEventListener('change', function () {
+        var language = this.value;
+        switchLanguage(language);
+    });
+
+    function switchLanguage(lang) {
+        // Logic to switch the language
+        // For demonstration purposes, this will just redirect to a URL
+        // Replace with your own logic (e.g., updating the page content, sending a request to the server, etc.)
+
+        window.location.href = '{{ url('blog_admin/languages/change_language') }}' + '/' + lang; // Example: redirect to '/en' or '/fr'
+    }
+</script>
 </body>
 </html>

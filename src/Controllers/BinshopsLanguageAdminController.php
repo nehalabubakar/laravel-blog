@@ -88,4 +88,19 @@ class BinshopsLanguageAdminController extends Controller
         Helpers::flash_message("Language: " . $language->name . " has been disabled.");
         return redirect( route('binshopsblog.admin.languages.index') );
     }
+
+    public function change_language(Request $request, $languageId)
+    {
+        $language = BinshopsLanguage::findOrFail($languageId);
+
+        try {
+            \App::setLocale($language->locale);
+//            \Carbon::setLocale($language);
+            session()->put('locale', $language->locale);
+
+            return redirect( route('binshopsblog.admin.index') );
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
+        }
+    }
 }

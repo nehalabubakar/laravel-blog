@@ -165,6 +165,10 @@ Route::group(['middleware' => ['web'], 'namespace' => '\BinshopsBlog\Controllers
             Route::post('/toggle_language/{languageId}',
                 'BinshopsLanguageAdminController@toggle_language')
                 ->name('binshopsblog.admin.languages.toggle_language');
+
+            Route::get('/change_language/{languageId}',
+                'BinshopsLanguageAdminController@change_language')
+                ->name('binshopsblog.admin.languages.change_language');
         });
     });
 });

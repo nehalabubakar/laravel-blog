@@ -3,8 +3,10 @@
 
     @if($post_translations)
         <div class='search-form-outer mb-3'>
-            <form method='get' action='{{route("binshopsblog.admin.searchblog", app('request')->get('locale'))}}' class='text-center'>
-                <input style="display: inline-block; width: 50%" type='text' name='s' placeholder='Search...' class='form-control' value='{{\Request::get("s")}}'>
+            <form method='get' action='{{route("binshopsblog.admin.searchblog", app('request')->get('locale'))}}'
+                  class='text-center'>
+                <input style="display: inline-block; width: 50%" type='text' name='s' placeholder='Search...'
+                       class='form-control' value='{{\Request::get("s")}}'>
                 <input style="display: inline-block" type='submit' value='Search' class='btn btn-primary m-2'>
             </form>
         </div>
@@ -14,16 +16,17 @@
 
     @forelse($post_translations as $post)
         @if(isset($post->indexable))
-            <?php $post = $post->indexable; ?>
+                <?php $post = $post->indexable; ?>
         @endif
 
         <div class="card m-4" style="">
             <div class="card-body">
-                <h5 class='card-title'><a class="a-link-cart-color" href='{{$post->url(app('request')->get('locale'))}}'>{{$post->title}}</a></h5>
+                <h5 class='card-title'><a class="a-link-cart-color"
+                                          href='{{$post->url(app('request')->get('locale'))}}'>{{$post->title}}</a></h5>
                 <h5 class='card-subtitle mb-2 text-muted'>{{$post->subtitle}}</h5>
                 <p class="card-text">{{$post->html}}</p>
 
-                <?=$post->image_tag("thumbnail", false, "float-right");?>
+                    <?= $post->image_tag("thumbnail", false, "float-right"); ?>
 
                 <dl class="">
                     <dt class="">Author</dt>
@@ -43,13 +46,15 @@
                     <dd class="">
                         @if(count($post->post->categories))
                             @foreach($post->post->categories as $category)
-                                <a class='btn btn-outline-secondary btn-sm m-1' href='{{$category->categoryTranslations->where('lang_id' , $language_id)->first()->edit_url()}}'>
+                                <a class='btn btn-outline-secondary btn-sm m-1'
+                                   href='{{$category->categoryTranslations->where('lang_id' , $language_id)->first()->edit_url()}}'>
                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
 
                                     {{$category->categoryTranslations->where('lang_id' , $language_id)->first()->category_name}}
                                 </a>
                             @endforeach
-                        @else No Categories
+                        @else
+                            No Categories
                         @endif
 
                     </dd>
@@ -62,12 +67,12 @@
                         <strong>View file:</strong><br>
                         <code>{{$post->use_view_file}}</code>
 
-                        <?php
+                            <?php
 
-                        $viewfile = resource_path("views/custom_blog_posts/" . $post->use_view_file . ".blade.php");
+                            $viewfile = resource_path("views/custom_blog_posts/" . $post->use_view_file . ".blade.php");
 
 
-                        ?>
+                            ?>
                         <br>
                         <strong>Full filename:</strong>
                         <br>
@@ -85,14 +90,16 @@
                 @endif
 
 
-                <a href="{{$post->url(app('request')->get('locale'))}}" class="card-link btn btn-outline-secondary"><i class="fa fa-file-text-o"
-                                                                                                                       aria-hidden="true"></i>
+                <a href="{{ $post->url(\App::getLocale()) }}" class="card-link btn btn-outline-secondary"><i
+                            class="fa fa-file-text-o"
+                            aria-hidden="true"></i>
                     View Post</a>
                 <a href="{{$post->edit_url()}}" class="card-link btn btn-primary">
                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                     Edit Post</a>
                 <form onsubmit="return confirm('Are you sure you want to delete this blog post?\n You cannot undo this action!');"
-                      method='post' action='{{route("binshopsblog.admin.destroy_post", $post->post_id)}}' class='float-right'>
+                      method='post' action='{{route("binshopsblog.admin.destroy_post", $post->post_id)}}'
+                      class='float-right'>
                     @csrf
                     <input name="_method" type="hidden" value="DELETE"/>
                     <button type='submit' class='btn btn-danger btn-sm'>

@@ -10,6 +10,7 @@ use BinshopsBlog\Helpers;
 use BinshopsBlog\Middleware\LoadLanguage;
 use BinshopsBlog\Middleware\UserCanManageBlogPosts;
 use BinshopsBlog\Models\BinshopsComment;
+use BinshopsBlog\Models\BinshopsLanguage;
 
 /**
  * Class BinshopsCommentsAdminController
@@ -35,6 +36,8 @@ class BinshopsCommentsAdminController extends Controller
      */
     public function index(Request $request)
     {
+        $language_list = BinshopsLanguage::all();
+
         $comments = BinshopsComment::withoutGlobalScopes()->orderBy("created_at", "desc")
             ->with("post");
 
@@ -44,8 +47,8 @@ class BinshopsCommentsAdminController extends Controller
 
         $comments = $comments->paginate(100);
         return view("binshopsblog_admin::comments.index")
-            ->withComments($comments
-            );
+            ->with('language_list', $language_list)
+            ->withComments($comments);
     }
 
 
@@ -84,6 +87,4 @@ class BinshopsCommentsAdminController extends Controller
         Helpers::flash_message("Deleted!");
         return back();
     }
-
-
 }

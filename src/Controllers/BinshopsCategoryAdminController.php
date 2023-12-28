@@ -40,10 +40,12 @@ class BinshopsCategoryAdminController extends Controller
      */
     public function index(Request $request){
         $language_id = $request->get('language_id');
+        $language_list = BinshopsLanguage::all();
         $categories = BinshopsCategoryTranslation::orderBy("category_id")->where('lang_id', $language_id)->paginate(25);
         return view("binshopsblog_admin::categories.index",[
             'categories' => $categories,
-            'language_id' => $language_id
+            'language_id' => $language_id,
+            'language_list' => $language_list
         ]);
     }
 
@@ -167,12 +169,12 @@ class BinshopsCategoryAdminController extends Controller
         )->first();
         $category->fill($request->all());
         $translation->fill($request->all());
-        
+
         // if the parent_id is passed in as 0 it will create an error
         if ($category->parent_id <= 0) {
             $category->parent_id = null;
         }
-        
+
         $category->save();
         $translation->save();
 
