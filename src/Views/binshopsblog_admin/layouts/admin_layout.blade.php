@@ -60,7 +60,7 @@
                 <ul class="navbar-nav ml-auto">
                     <!-- Authentication Links -->
 
-                    <li class='nav-item px-2'><a class='nav-link' href='{{route("binshopsblog.index" , app('request')->get('locale'))}}' target="_blank">Blog home</a></li>
+                    <li class='nav-item px-2'><a class='nav-link' href='{{route("binshopsblog.index" , \App::getLocale())}}' target="_blank">Blog home</a></li>
 
                     <li class="nav-item ">
                         <a id="" class="nav-link " href="#" role="button"
@@ -88,13 +88,13 @@
             <div class='row full-width-div nav-bar-full'>
                 <div class='list-group-color'>
                     @include("binshopsblog_admin::layouts.sidebar")
-                    <div class=' list-group-color text-center mt-5 mb-3 text-muted binshops-version'>
-                        <small><a href='https://github.com/binshops/laravel-blog'>Binshops Blog</a></small>
+{{--                    <div class=' list-group-color text-center mt-5 mb-3 text-muted binshops-version'>--}}
+{{--                        <small><a href='https://github.com/binshops/laravel-blog'>Binshops Blog</a></small>--}}
 
-                        <small>
-                            Version 9.2.x
-                        </small>
-                    </div>
+{{--                        <small>--}}
+{{--                            Version 9.2.x--}}
+{{--                        </small>--}}
+{{--                    </div>--}}
                 </div>
                 <div class='col-md-9 main-content'>
 
